@@ -1,19 +1,31 @@
-
-import Skeleton from '@/components/common/Skeleton'
-import EventCard from '@/components/events/EventCard'
-import FeaturedCarousel from '@/components/events/FeaturedCarousel'
-import { Button } from '@/components/ui/button'
-import axios from 'axios'
-import { ArrowRight, Briefcase, ChevronRight, Compass, Cpu, Flame, GraduationCap, MapPin, Music, Palette, Sparkles, Tag, Trophy } from 'lucide-react'
-import React, { useEffect, useState } from 'react'
-import { Link } from 'react-router';
+import Skeleton from "@/components/common/Skeleton";
+import EventCard from "@/components/events/EventCard";
+import FeaturedCarousel from "@/components/events/FeaturedCarousel";
+import { Button } from "@/components/ui/button";
+import axios from "axios";
+import {
+  ArrowRight,
+  Briefcase,
+  ChevronRight,
+  Compass,
+  Cpu,
+  Flame,
+  GraduationCap,
+  MapPin,
+  Music,
+  Palette,
+  Sparkles,
+  Tag,
+  Trophy,
+} from "lucide-react";
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router";
 
 function getCategoryIconComponent(category) {
-
   const icon = category?.icon || "";
 
   if (icon === "palette") {
-    return Palette
+    return Palette;
   }
 
   if (icon === "briefcase") {
@@ -21,28 +33,25 @@ function getCategoryIconComponent(category) {
   }
 
   if (icon === "graduation-cap") {
-    return GraduationCap
+    return GraduationCap;
   }
 
   if (icon === "music") {
-    return Music
+    return Music;
   }
 
   if (icon === "trophy") {
-    return Trophy
+    return Trophy;
   }
 
   if (icon === "cpu") {
-    return Cpu
+    return Cpu;
   }
 
-
   return Tag;
-
 }
 
 function getCatergoryColor(i) {
-
   const colors = [
     {
       icon: "bg-orange-50 text-[#E65100] border-orange-200 group-hover:bg-[#E65100] group-hover:text-white",
@@ -70,7 +79,6 @@ function getCatergoryColor(i) {
     },
   ];
   return colors[i % colors.length];
-
 }
 
 const HUB_CITIES = [
@@ -97,8 +105,7 @@ const HUB_CITIES = [
 ];
 
 function HomePage() {
-
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(false);
 
   const [categories, setCategories] = useState([]);
 
@@ -108,32 +115,41 @@ function HomePage() {
 
   useEffect(() => {
     async function loadHomePage() {
-      setIsLoading(true)
+      setIsLoading(true);
       try {
-        let { data: { data } } = await axios.get("https://eventsphere-server-mfdb.onrender.com/api/events/featured ")
-        setFeaturedEvents(data)
-      } catch (error) { }
+        let {
+          data: { data },
+        } = await axios.get(
+          "https://eventsphere-server-mfdb.onrender.com/api/events/featured ",
+        );
+        setFeaturedEvents(data);
+      } catch (error) {}
 
       try {
-        let { data: { data } } = await axios.get("https://eventsphere-server-mfdb.onrender.com/api/categories")
-        setCategories(data)
-      } catch (error) { }
+        let {
+          data: { data },
+        } = await axios.get(
+          "https://eventsphere-server-mfdb.onrender.com/api/categories",
+        );
+        setCategories(data);
+      } catch (error) {}
 
       try {
-        let { data: { data } } = await axios.get("https://eventsphere-server-mfdb.onrender.com/api/events?limit=8&sort=startDate&order=asc ")
-        setTrendingEvents(data)
-      } catch (error) { }
+        let {
+          data: { data },
+        } = await axios.get(
+          "https://eventsphere-server-mfdb.onrender.com/api/events?limit=8&sort=startDate&order=asc ",
+        );
+        setTrendingEvents(data);
+      } catch (error) {}
 
-      setIsLoading(false)
+      setIsLoading(false);
     }
     loadHomePage();
-  }, [])
-
-
+  }, []);
 
   return (
     <div className="space-y-16 pb-20">
-
       <section className="relative pt-12 pb-6 sm:pt-16 sm:pb-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col lg:flex-row items-start lg:items-end justify-between gap-8 pb-10 border-b border-[#EBE8DF]">
           <div className="max-w-2xl space-y-4">
@@ -200,8 +216,13 @@ function HomePage() {
 
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-5">
         <div>
-          <h2 className="text-xl font-bold text-stone-900 tracking-tight">Browse by Discipline</h2>
-          <p className="text-xs text-stone-500">Curated tracks dynamically fetched from our active community listings</p>
+          <h2 className="text-xl font-bold text-stone-900 tracking-tight">
+            Browse by Discipline
+          </h2>
+          <p className="text-xs text-stone-500">
+            Curated tracks dynamically fetched from our active community
+            listings
+          </p>
         </div>
 
         {isLoading ? (
@@ -222,30 +243,36 @@ function HomePage() {
         ) : (
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3.5">
             {categories.map((c, i) => {
-
               const Icon = getCategoryIconComponent(c);
-              const color = getCatergoryColor(i)
+              const color = getCatergoryColor(i);
 
-              return <Link
-                key={c._id}
-                to="/explore"
-                className="p-4 rounded-2xl bg-white border border-[#EBE8DF] hover:border-[#D5D0C2] hover:shadow-subtle transition-all duration-200 group flex flex-col justify-between">
-                <div className={`w-10 h-10 rounded-xl border flex items-center justify-center mb-3 transition-all duration-200  ${color?.icon}`}>
-                  <Icon />
-                </div>
-                <div>
-                  <p className={`text-xs font-bold text-stone-900 leading-snug group-hover:text-[#E65100] transition-colors ${color?.text}`}>
-                    {c.name}
-                  </p>
-                  <p className="text-[11px] text-stone-400 mt-0.5">{c.eventCount} Events</p>
-                </div>
-              </Link>
-
+              return (
+                <Link
+                  key={c._id}
+                  to="/explore"
+                  className="p-4 rounded-2xl bg-white border border-[#EBE8DF] hover:border-[#D5D0C2] hover:shadow-subtle transition-all duration-200 group flex flex-col justify-between"
+                >
+                  <div
+                    className={`w-10 h-10 rounded-xl border flex items-center justify-center mb-3 transition-all duration-200  ${color?.icon}`}
+                  >
+                    <Icon />
+                  </div>
+                  <div>
+                    <p
+                      className={`text-xs font-bold text-stone-900 leading-snug group-hover:text-[#E65100] transition-colors ${color?.text}`}
+                    >
+                      {c.name}
+                    </p>
+                    <p className="text-[11px] text-stone-400 mt-0.5">
+                      {c.eventCount} Events
+                    </p>
+                  </div>
+                </Link>
+              );
             })}
           </div>
         )}
       </section>
-
 
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-[#EBE8DF]">
@@ -259,55 +286,62 @@ function HomePage() {
           </div>
           <Link
             to="/explore"
-            className="inline-flex items-center justify-center gap-1.5 whitespace-nowrap px-3 py-1.5 text-xs rounded-lg font-medium border border-[#CCC8BA] bg-transparent hover:bg-[#F2F1EC] text-[#222]">
+            className="inline-flex items-center justify-center gap-1.5 whitespace-nowrap px-3 py-1.5 text-xs rounded-lg font-medium border border-[#CCC8BA] bg-transparent hover:bg-[#F2F1EC] text-[#222]"
+          >
             <span>View All Events</span>
             <ArrowRight />
           </Link>
         </div>
 
-        {isLoading ? (<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {[...Array(8)].map((_, i) => (
-            <Skeleton />
-          ))}
-        </div>
+        {isLoading ? (
+          <div  className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[...Array(8)].map((_, i) => (
+             <Skeleton />
+            ))}
+          </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {trendingEvents.map((e) => {
-              return <EventCard key={e._id} event={e} />
+              return <EventCard key={e._id} event={e} />;
             })}
           </div>
         )}
-      </section >
-
+      </section>
 
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-5">
         <div>
-          <h2 className="text-xl font-bold text-stone-900 tracking-tight">Explore by Community Hub</h2>
-          <p className="text-xs text-stone-500">Vibrant hubs where local conclaves thrive</p>
+          <h2 className="text-xl font-bold text-stone-900 tracking-tight">
+            Explore by Community Hub
+          </h2>
+          <p className="text-xs text-stone-500">
+            Vibrant hubs where local conclaves thrive
+          </p>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-
-          {
-            HUB_CITIES.map((c, i) => (
-              <Link
-                key={i}
-                to="/explore"
-                className="group relative rounded-2xl overflow-hidden aspect-4/3 bg-stone-900 shadow-subtle border border-[#EBE8DF]" >
-                <img
-                  src={c.img}
-                  alt={c.name}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-75" />
-                <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/20 to-transparent" />
-                <div className="absolute bottom-4 left-4 right-4 text-white">
-                  <div className="flex items-center gap-1.5 text-orange-400 text-xs font-semibold">
-                    <MapPin />
-                    <span>{c.name}</span>
-                  </div>
-                  <p className="text-xs text-stone-300 font-medium mt-0.5">{c.label}</p>
+          {HUB_CITIES.map((c, i) => (
+            <Link
+              key={i}
+              to="/explore"
+              className="group relative rounded-2xl overflow-hidden aspect-4/3 bg-stone-900 shadow-subtle border border-[#EBE8DF]"
+            >
+              <img
+                src={c.img}
+                alt={c.name}
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-75"
+              />
+              <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/20 to-transparent" />
+              <div className="absolute bottom-4 left-4 right-4 text-white">
+                <div className="flex items-center gap-1.5 text-orange-400 text-xs font-semibold">
+                  <MapPin />
+                  <span>{c.name}</span>
                 </div>
-              </Link>
-            ))}
+                <p className="text-xs text-stone-300 font-medium mt-0.5">
+                  {c.label}
+                </p>
+              </div>
+            </Link>
+          ))}
         </div>
       </section>
 
@@ -321,27 +355,30 @@ function HomePage() {
               Host your next summit, workshop or indie showcase on EventSphere.
             </h2>
             <p className="text-sm text-stone-300 leading-relaxed">
-              Every registered user can organize events. Enjoy seamless ticketing, automatic calendar syncing, verified attendee reviews, and real-time dashboard analytics.
+              Every registered user can organize events. Enjoy seamless
+              ticketing, automatic calendar syncing, verified attendee reviews,
+              and real-time dashboard analytics.
             </p>
           </div>
 
           <div className="flex flex-col sm:flex-row items-center gap-3 shrink-0">
             <Link
               to="/create-event"
-              className="inline-flex items-center justify-center gap-2 whitespace-nowrap font-semibold px-5 py-2.5 text-base rounded-xl bg-[#E65100] text-white hover:bg-[#D84315] w-full sm:w-auto shadow-lg">
+              className="inline-flex items-center justify-center gap-2 whitespace-nowrap font-semibold px-5 py-2.5 text-base rounded-xl bg-[#E65100] text-white hover:bg-[#D84315] w-full sm:w-auto shadow-lg"
+            >
               Create Event Now
             </Link>
             <Link
               to="/profile"
-              className="inline-flex items-center justify-center gap-2 whitespace-nowrap font-semibold px-5 py-2.5 text-base rounded-xl w-full sm:w-auto bg-white/10 text-white border border-white/20 hover:bg-white/20">
+              className="inline-flex items-center justify-center gap-2 whitespace-nowrap font-semibold px-5 py-2.5 text-base rounded-xl w-full sm:w-auto bg-white/10 text-white border border-white/20 hover:bg-white/20"
+            >
               Organizer Portal
             </Link>
           </div>
         </div>
       </section>
-
-    </div >
-  )
+    </div>
+  );
 }
 
-export default HomePage
+export default HomePage;
