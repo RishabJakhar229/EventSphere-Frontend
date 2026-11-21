@@ -1,5 +1,7 @@
 import { formatEventDate, formatPrice } from "@/lib/utils";
+import { toggleFavourites } from "@/Store/slices/favouriteSlice";
 import { Bookmark, Calendar } from "lucide-react";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router";
 
 export default function EventCard({ event }) {
@@ -15,6 +17,10 @@ export default function EventCard({ event }) {
     slug,
     category: { name },
   } = event;
+
+const dispatch = useDispatch();
+const state = useSelector((state)=>state.favourites.name)
+
   return (
     <Link
       to={`/events/${slug}`}
@@ -24,8 +30,7 @@ export default function EventCard({ event }) {
           <img
             src={image}
             alt={title}
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
-          />
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"/>
 
           <div className="absolute top-3 left-3 right-3 flex items-center justify-between pointer-events-none">
             <span className="px-2.5 py-1 rounded-full text-[11px] font-medium bg-black/70 text-white backdrop-blur-md shadow-sm">
@@ -33,9 +38,12 @@ export default function EventCard({ event }) {
             </span>
 
             <button
+            onClick={(e)=>{
+              e.preventDefault();
+              dispatch(toggleFavourites("rishuu"));
+            }}
               type="button"
-              className="pointer-events-auto w-8 h-8 rounded-full bg-white/90 backdrop-blur-md shadow-sm border border-black/5 flex items-center justify-center hover:bg-white hover:scale-110 active:scale-95 transition-all text-stone-700 hover:text-stone-900 cursor-pointer text-xs"
-            >
+              className="pointer-events-auto w-8 h-8 rounded-full bg-white/90 backdrop-blur-md shadow-sm border border-black/5 flex items-center justify-center hover:bg-white hover:scale-110 active:scale-95 transition-all text-stone-700 hover:text-stone-900 cursor-pointer text-xs">
               <Bookmark />
             </button>
           </div>

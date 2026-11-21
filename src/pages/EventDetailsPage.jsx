@@ -198,8 +198,7 @@ export default function EventDetailsPage() {
                   <div className="flex items-center gap-2">
                     <Link
                       to="/profile"
-                      className="font-bold text-base text-stone-900 hover:text-[#E65100] transition-colors"
-                    >
+                      className="font-bold text-base text-stone-900 hover:text-[#E65100] transition-colors">
                       {event?.organizer?.name}
                     </Link>
                     <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded bg-stone-100 text-stone-700">
